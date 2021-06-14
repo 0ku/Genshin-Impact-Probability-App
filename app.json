@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "genshin-probablity-calculator",
-    "slug": "genshin-probablity-calculator",
+    "name": "genshin-probability-app",
+    "slug": "genshin-probability-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

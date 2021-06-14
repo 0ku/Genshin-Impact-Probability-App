@@ -1,12 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-
+import InputBox from './Inputs';
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <Text style = {styles.title}>Genshin Probability Calculator</Text>
+      <InputBox/>
+      <StatusBar style="auto"/>
     </View>
   );
 }
@@ -14,8 +15,16 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#2E2E2E',
     alignItems: 'center',
     justifyContent: 'center',
   },
+
+  title: {
+    color: 'white',
+    fontSize: 25,
+    fontWeight: "bold",
+  }
 });
+
+
