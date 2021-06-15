@@ -1,14 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, SafeAreaView } from 'react-native';
 import InputBox from './Inputs';
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text style = {styles.title}>Genshin Probability Calculator</Text>
+    <SafeAreaView style={styles.container}>
+      <Text style = {styles.title}>Genshin Impact Probability Calculator</Text>
       <InputBox/>
       <StatusBar style="auto"/>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -21,6 +21,10 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    flexWrap:'wrap',
+    position: 'absolute',
+    textAlign: 'center',
+    top: '25%',
     color: 'white',
     fontSize: 25,
     fontWeight: "bold",
