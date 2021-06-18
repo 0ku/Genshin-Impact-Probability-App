@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import DropDownPicker from 'react-native-dropdown-picker';
+//import { Container, Header, Content, Picker, Form } from "native-base";
 import {
   CheckBox,
   TextInput,
@@ -8,22 +8,17 @@ import {
   Text,
   SafeAreaView,
   View,
-  Picker,
-  TouchableWithoutFeedback,
 } from "react-native";
 
 export default function InputBox() {
   const [pulls, setPulls] = useState(0);
-  const [isEventBanner, setEventBanner] = useState(false);
-  const [isWeaponBanner, setWeaponBanner] = useState(false);
-  const [isStandardBanner, setStandardBanner] = useState(false);
-  //for dropdown menu
-  const [open,setOpen] = useState(false);
-  const [items,setItems] = useState([
-    {label: '5* Character', value: '5*character'},
-    {label: '5* Specific Character', value: '5*specificChar'},
-  ]);
-  const [value,setValue] = useState(null);
+  const [itemType, setItemType] = useState("");
+  const [banner, setBanner] = useState("");
+  const [value, setValue] = useState(null);
+  function isNumeric(num) {
+    return !isNaN(num);
+  }
+
   function checkInput(banner) {
     if (banner == 1) {
       //1 for Standard banner
@@ -49,16 +44,31 @@ export default function InputBox() {
     }
   }
 
-  function checkItemType(itemType) {
-    if (isWeaponBanner == false && isEventBanner == false && isStandardBanner == false) {
-      alert("You cannot select an item type prior to selecting a banner type");
-    }
-    else if (itemType == "5*character" && isWeaponBanner == false) {
-      set5starChar(true);
+  function checkItemType(input) {
+    if (
+      banner == "standardBanner" &&
+      (input == "5*character" || input == "5*starweapon")
+    ) {
+      setItemType(input);
+    } else {
+      alert(
+        "sorry but this item type is not compatible with the chosen banner"
+      );
+      console.log(itemType);
+      setItemType("5*limitedcharacter");
     }
   }
+
+  function verifyPulls(userInput) {
+    if (isNumeric(userInput)) {
+      setPulls(userInput);
+    } else {
+      alert("Hi");
+    }
+  }
+
   return (
-    <View style = {styles.conatiner1}>
+    <View style={styles.conatiner1}>
       <SafeAreaView>
         <SafeAreaView style={styles.container}>
           <Text style={styles.text}> Number of pulls</Text>
@@ -66,70 +76,38 @@ export default function InputBox() {
             keyboardType={"numeric"}
             placeholder="0"
             style={styles.input}
+            onChangeText={(value) => verifyPulls(value)}
           />
         </SafeAreaView>
       </SafeAreaView>
-      <View style={styles.text1}>
+      <View style={styles.defaultView}>
         <Text style={styles.text2}>Banner Type</Text>
+        <View style={styles.pickerContainer}>
+        </View>
       </View>
-      <SafeAreaView style={styles.container2}>
-        <SafeAreaView style={styles.checkBoxContainer}>
-          <Text style={styles.text}> Standard</Text>
-          <CheckBox
-            style={styles.checkBox}
-            value={isStandardBanner}
-            onValueChange={() => checkInput(1)}
-          ></CheckBox>
-        </SafeAreaView>
-        <SafeAreaView style={styles.checkBoxContainer}>
-          <Text style={styles.text}> Event</Text>
-          <CheckBox
-            style={styles.checkBox}
-            value={isEventBanner}
-            onValueChange={() => checkInput(2)}
-          ></CheckBox>
-        </SafeAreaView>
-        <SafeAreaView style={styles.checkBoxContainer}>
-          <Text style={styles.text}> Weapon</Text>
-          <CheckBox
-            style={styles.checkBox}
-            value={isWeaponBanner}
-            onValueChange={() => checkInput(3)}
-          ></CheckBox>
-        </SafeAreaView>
-      </SafeAreaView>
-      <View style={styles.text1}>
-        <Text style = {styles.text2}>
-        Item type 
-        </Text>
+      <View style={styles.defaultView}>
+        <Text style={styles.text2}>Item type</Text>
       </View>
-      <DropDownPicker
-      dropDownDirection = {"BOTTOM"}
-      dropDownContainerStyle = {styles.dropdownOpen}
-      items = {items}
-      open ={open}
-      setOpen={setOpen}
-      setValue={setValue}
-      />
+
+      <View style={styles.pickerContainer}>
+      </View>
+
     </View>
   );
 }
-
-
 
 const styles = StyleSheet.create({
   text: {
     color: "white",
   },
-  dropdownOpen: {
-    backgroundColor: "white",
-    alignItems: 'center',
-    borderWidth: 0,
-    fontSize: 15,
+  pickerContainer: {
+    padding: 8,
+    justifyContent: "center",
+    alignItems: "center",
   },
   conatiner1: {
-    top: '30%',
-    position: 'absolute',
+    top: "35%",
+    position: "absolute",
   },
   text2: {
     color: "white",
@@ -142,7 +120,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  text1: {
+  defaultView: {
     textAlign: "center",
     alignItems: "center",
   },
