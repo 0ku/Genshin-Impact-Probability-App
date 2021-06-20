@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
-//import { Container, Header, Content, Picker, Form } from "native-base";
+import React, { useState } from "react"
+
 import {
   CheckBox,
   TextInput,
@@ -8,6 +8,7 @@ import {
   Text,
   SafeAreaView,
   View,
+  TouchableOpacity,
 } from "react-native";
 
 export default function InputBox() {
@@ -19,30 +20,6 @@ export default function InputBox() {
     return !isNaN(num);
   }
 
-  function checkInput(banner) {
-    if (banner == 1) {
-      //1 for Standard banner
-      if (isStandardBanner == true) {
-        setStandardBanner(false);
-      } else if (isEventBanner == false && isWeaponBanner == false) {
-        setStandardBanner(true);
-      }
-    } else if (banner == 2) {
-      //2 for Event banner
-      if (isEventBanner == true) {
-        setEventBanner(false);
-      } else if (isStandardBanner == false && isWeaponBanner == false) {
-        setEventBanner(true);
-      }
-    } else if (banner == 3) {
-      //2 for Weapon banner
-      if (isWeaponBanner == true) {
-        setWeaponBanner(false);
-      } else if (isStandardBanner == false && isEventBanner == false) {
-        setWeaponBanner(true);
-      }
-    }
-  }
 
   function checkItemType(input) {
     if (
@@ -60,38 +37,71 @@ export default function InputBox() {
   }
 
   function verifyPulls(userInput) {
+    var previousInput = pulls
     if (isNumeric(userInput)) {
       setPulls(userInput);
-    } else {
+    } 
+    else {
       alert("Hi");
+      setPulls(previousInput);
     }
   }
 
   return (
-    <View style={styles.conatiner1}>
+    <View style={styles.container1}>
+      <View style={styles.divider}></View>
+      <View style ={styles.containerVertical}>
+      <Text style = {styles.text2}>Selected Properties</Text>
+      <View style={styles.buttonContainer}>
+      <TextInput
+            placeholder={banner}
+            editable ={false}
+            style = {styles.input2}/>
+      <TextInput
+            placeholder={itemType}
+            editable ={false}
+            style = {styles.input2}/>
+      </View>
+      </View>
       <SafeAreaView>
         <SafeAreaView style={styles.container}>
-          <Text style={styles.text}> Number of pulls</Text>
+          <Text style={styles.text2}> Number of pulls</Text>
           <TextInput
             keyboardType={"numeric"}
             placeholder="0"
             style={styles.input}
-            onChangeText={(value) => verifyPulls(value)}
+            onChangeText={(value) => setPulls(value)}
           />
         </SafeAreaView>
       </SafeAreaView>
       <View style={styles.defaultView}>
         <Text style={styles.text2}>Banner Type</Text>
-        <View style={styles.pickerContainer}>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity 
+          style = {styles.buttonStyle}
+          onPress = {()=>setBanner("Standard")}>
+            <Text>Standard</Text>
+          </TouchableOpacity>
+          <View style={styles.divider}></View>
+          
+          <TouchableOpacity 
+          style = {styles.buttonStyle}
+          onPress = {()=>setBanner("Event")}>
+            <Text>Event</Text>
+          </TouchableOpacity>
+          <View style={styles.divider}></View>
+          
+          <TouchableOpacity 
+          style = {styles.buttonStyle}
+          onPress = {()=>setBanner("Weapon")}>
+            <Text>Weapon</Text>
+          </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.defaultView}>
+      <View style={styles.container}>
         <Text style={styles.text2}>Item type</Text>
       </View>
-
-      <View style={styles.pickerContainer}>
-      </View>
-
     </View>
   );
 }
@@ -100,65 +110,71 @@ const styles = StyleSheet.create({
   text: {
     color: "white",
   },
-  pickerContainer: {
-    padding: 8,
-    justifyContent: "center",
-    alignItems: "center",
+  buttonStyle: {
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    borderRadius: 4,
+    backgroundColor: "oldlace",
+    alignSelf: 'flex-start',
+    marginHorizontal: "1%",
+    marginBottom: 6,
+    minWidth: "25%",
+    textAlign: "center",
   },
-  conatiner1: {
+  buttonContainer: {
+    padding: 5,
+    flexWrap: "wrap",
+    flexDirection: "row",
+    alignItems: "center",
+    display: "flex",
+  },
+  container1: {
     top: "35%",
     position: "absolute",
   },
   text2: {
     color: "white",
     fontWeight: "bold",
-    paddingTop: 7,
-    fontSize: 17,
-  },
-  container2: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    fontSize: 15,
   },
   defaultView: {
     textAlign: "center",
     alignItems: "center",
+    padding:10,
+  },
+  input2: {
+    backgroundColor: 'white',
+    width: '40%',
+    height: 40,
+    textAlign: "left",
+    color: "black",
+    borderRadius: 8,
+    textAlign: "center",
+    marginRight: 12,
   },
   input: {
+    backgroundColor: 'white',
     height: 40,
     textAlign: "left",
     paddingLeft: 10,
     margin: 12,
-    borderWidth: 1,
-    color: "white",
+    color: "black",
     borderRadius: 8,
     width: 80,
   },
   container: {
-    marginTop: 10,
     flexDirection: "row",
-    backgroundColor: "#2E2E2E",
     alignItems: "center",
     justifyContent: "center",
   },
-  checkBoxContainer: {
-    margin: 5,
-    flexDirection: "row",
-    backgroundColor: "#2E2E2E",
+  containerVertical: {
     alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
   },
-  checkBoxContainer2: {
-    marginTop: 2,
-    flexDirection: "row",
-    backgroundColor: "#2E2E2E",
-    alignItems: "center",
-  },
-
-  checkBox: {
-    alignSelf: "center",
-    height: 30,
-    width: 30,
-    padding: 5,
+  divider: {
+    width: 10,
+    height: 20,
   },
 
   title: {
