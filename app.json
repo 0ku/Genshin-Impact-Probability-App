@@ -23,7 +23,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.yukinno.genshinprobabilityapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"

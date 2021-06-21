@@ -13,7 +13,7 @@ import {
 } from "react-native";
 
 export default function InputBox() {
-  const [pulls, setPulls] = useState(0);
+  const [pulls, setPulls] = useState(null);
   const [itemType, setItemType] = useState("");
   const [banner, setBanner] = useState("");
   const [value, setValue] = useState(null);
@@ -22,17 +22,27 @@ export default function InputBox() {
     return !isNaN(num);
   }
 
+  function reset() {
+    setPulls(null);
+    setBanner("")
+    setProbability(0)
+    setItemType("")
+  }
   function calculateProbability() {
     var probability = 0;
     if (isNumeric(pulls) == false) {
       alert("You have an invalid pull input")
       return
     }
+    else if  (parseInt(pulls) < 0) {
+      alert("You cannot have negative pulls")
+      return
+    }
     if (itemType == "5* Character" && banner == "Standard") {
       var pityPulls = Math.floor(pulls/90)
       var tempPulls = pulls - pityPulls
       probability += (Math.pow((1 - (5/15)),pityPulls))
-      probability *= (Math.pow((1-(6/1000)),tempPulls))
+      probability *= (Math.pow((1-(1/500)),tempPulls))
       setProbability((1-probability)*100)
       return
     }
@@ -40,7 +50,65 @@ export default function InputBox() {
       var pityPulls = Math.floor(pulls/90)
       var tempPulls = pulls - pityPulls
       probability += (Math.pow((1 - (10/15)),pityPulls))
+      probability *= (Math.pow((1-(1/250)),tempPulls))
+      setProbability((1-probability)*100)
+      return
+    }
+    if ((itemType == "5* Specific Character" || itemType == "5* Specific Weapon") && banner == "Standard") {
+      var pityPulls = Math.floor(pulls/90)
+      var tempPulls = pulls - pityPulls
+      probability += (Math.pow((1 - (5/75)),pityPulls))
+      probability *= (Math.pow((1-(1/2500)),tempPulls))
+      setProbability((1-probability)*100)
+      return
+    }
+    if (itemType == "5* Limited Character" && banner == "Event") {
+      var pityPulls = Math.floor(pulls/90)
+      var tempPulls = pulls - pityPulls
+      probability += (Math.pow((1 - (1/2)),pityPulls))
       probability *= (Math.pow((1-(6/1000)),tempPulls))
+      setProbability((1-probability)*100)
+      if (pulls >= 180) {
+        setProbability(100);
+      }
+      return
+    }
+    if (itemType == "5* Character" && banner == "Event") {
+      if (pulls >= 90) {
+        setProbability(100);
+      }
+      else {
+        var pityPulls = Math.floor(pulls/90)
+        var tempPulls = pulls - pityPulls
+        probability += (Math.pow((1-(6/1000)),tempPulls))
+        setProbability((1-probability)*100)
+      }
+      return
+    }
+
+    if (itemType == "5* Specific Character" && banner == "Event") {
+      var pityPulls = Math.floor(pulls/90)
+      var tempPulls = pulls - pityPulls
+      probability += (Math.pow((1 - (1/10)),pityPulls))
+      probability *= (Math.pow((1-(3/5000)),tempPulls))
+      setProbability((1-probability)*100)
+      return
+    }
+    if (itemType == "5* Weapon" && banner == "Weapon") {
+      if (pulls >= 90) {
+        setProbability(100)
+        return
+      }
+      var tempPulls = pulls
+      probability += (Math.pow((1-(7/1000)),tempPulls))
+      setProbability((1-probability)*100)
+      return
+    }
+    if (itemType == "5* Specific Weapon" && banner == "Weapon") {
+      var pityPulls = Math.floor(pulls/90)
+      var tempPulls = pulls - pityPulls
+      probability += (Math.pow((1-(7/4000)),tempPulls))
+      probability *= (Math.pow((1-(0.25)),pityPulls))
       setProbability((1-probability)*100)
       return
     }
@@ -54,7 +122,7 @@ export default function InputBox() {
     else if (((input == "5* Weapon")||(input == "5* Specific Weapon")) && (banner == "Event")) {
       alert(incompatible)
     }
-    else if ((input == '5* Limited Character') && (banner != 'Event')) {
+    else if ((input == '5* Limited Character') && ((banner == 'Standard') || (banner == 'Weapon'))) {
       alert(incompatible)
     }
     else {
@@ -75,16 +143,6 @@ export default function InputBox() {
     }
     else {
       setBanner(input)
-    }
-  }
-
-  function verifyPulls(userInput) {
-    var previousInput = pulls;
-    if (isNumeric(userInput)) {
-      setPulls(userInput);
-    } else {
-      alert("Hi");
-      setPulls(previousInput);
     }
   }
 
@@ -110,7 +168,7 @@ export default function InputBox() {
           <Text style={styles.text2}> Number of pulls</Text>
           <TextInput
             keyboardType={"numeric"}
-            placeholder="0"
+            value={pulls}
             style={styles.input}
             onChangeText={(value) => setPulls(value)}
           />
@@ -167,9 +225,13 @@ export default function InputBox() {
           />
         </View>
       </View>
+      <View style={styles.defaultView}>
+        <CustomButton2 text="Clear" color="orange" onPress={()=>reset()}></CustomButton2>
+      </View>
+
       <View style={styles.container3}>
         <CustomButton2 text="Calculate" color="green" onPress={()=>calculateProbability()}></CustomButton2>
-        <TextInput value = {probability.toFixed(3)} style={styles.input3} editable = {false}/>
+        <TextInput value = {probability.toFixed(3) + "%"} style={styles.input3} editable = {false}/>
       </View>
     </View>
   );
@@ -202,7 +264,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     alignItems: "center",
     justifyContent: "center",
-    padding: 10,
+    padding: 2,
   },
   input2: {
     backgroundColor: "white",
@@ -246,7 +308,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     display: "flex",
-    padding: 20,
+    padding: 10,
   },
   containerVertical: {
     alignItems: "center",
