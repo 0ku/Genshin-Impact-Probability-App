@@ -31,9 +31,17 @@ export default function InputBox() {
     if (itemType == "5* Character" && banner == "Standard") {
       var pityPulls = Math.floor(pulls/90)
       var tempPulls = pulls - pityPulls
-      probability += (1-Math.pow((10/15),pityPulls))
-      probability += (1-Math.pow((6/1000),tempPulls))
-      setProbability(probability)
+      probability += (Math.pow((1 - (5/15)),pityPulls))
+      probability *= (Math.pow((1-(6/1000)),tempPulls))
+      setProbability((1-probability)*100)
+      return
+    }
+    if (itemType == "5* Weapon" && banner == "Standard") {
+      var pityPulls = Math.floor(pulls/90)
+      var tempPulls = pulls - pityPulls
+      probability += (Math.pow((1 - (10/15)),pityPulls))
+      probability *= (Math.pow((1-(6/1000)),tempPulls))
+      setProbability((1-probability)*100)
       return
     }
   }
@@ -161,7 +169,7 @@ export default function InputBox() {
       </View>
       <View style={styles.container3}>
         <CustomButton2 text="Calculate" color="green" onPress={()=>calculateProbability()}></CustomButton2>
-        <TextInput value = {probability.toString()} style={styles.input3} editable = {false}/>
+        <TextInput value = {probability.toFixed(3)} style={styles.input3} editable = {false}/>
       </View>
     </View>
   );
@@ -207,7 +215,7 @@ const styles = StyleSheet.create({
   },
   input3: {
     backgroundColor: "white",
-    width: "20%",
+    width: "30%",
     height: 50,
     color: "black",
     borderRadius: 8,
