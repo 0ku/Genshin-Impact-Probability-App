@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react"
-
+import React, { useState } from "react";
+import {CustomButton1} from "./Buttons";
+import {CustomButton2} from "./Buttons";
 import {
   CheckBox,
   TextInput,
@@ -16,32 +17,64 @@ export default function InputBox() {
   const [itemType, setItemType] = useState("");
   const [banner, setBanner] = useState("");
   const [value, setValue] = useState(null);
+  const [probability,setProbability] = useState(0);
   function isNumeric(num) {
     return !isNaN(num);
   }
 
+  function calculateProbability() {
+    var probability = 0;
+    if (isNumeric(pulls) == false) {
+      alert("You have an invalid pull input")
+      return
+    }
+    if (itemType == "5* Character" && banner == "Standard") {
+      var pityPulls = Math.floor(pulls/90)
+      var tempPulls = pulls - pityPulls
+      probability += (1-Math.pow((10/15),pityPulls))
+      probability += (1-Math.pow((6/1000),tempPulls))
+      setProbability(probability)
+      return
+    }
+  }
 
   function checkItemType(input) {
-    if (
-      banner == "standardBanner" &&
-      (input == "5*character" || input == "5*starweapon")
-    ) {
-      setItemType(input);
-    } else {
-      alert(
-        "sorry but this item type is not compatible with the chosen banner"
-      );
-      console.log(itemType);
-      setItemType("5*limitedcharacter");
+    var incompatible = "Sorry, the item you have chosen is incompatible with the banner you have picked"
+    if (((input == "5* Character") || (input == "5* Specific Character") || (input == '5* Limited Character')) && (banner == "Weapon")) {
+      alert(incompatible)
+    }
+    else if (((input == "5* Weapon")||(input == "5* Specific Weapon")) && (banner == "Event")) {
+      alert(incompatible)
+    }
+    else if ((input == '5* Limited Character') && (banner != 'Event')) {
+      alert(incompatible)
+    }
+    else {
+      setItemType(input)
+    }
+  }
+
+  function checkBanner(input) {
+    var incompatible = "Sorry, the item you have chosen is incompatible with the banner you have picked"
+    if (((itemType == "5* Character") || (itemType == "5* Specific Character") || (itemType == '5* Limited Character')) && (input == "Weapon")) {
+      alert(incompatible)
+    }
+    else if (((itemType == "5* Weapon")||(itemType == "5* Specific Weapon")) && (input == "Event")) {
+      alert(incompatible)
+    }
+    else if ((itemType == '5* Limited Character') && (input != 'Event')) {
+      alert(incompatible)
+    }
+    else {
+      setBanner(input)
     }
   }
 
   function verifyPulls(userInput) {
-    var previousInput = pulls
+    var previousInput = pulls;
     if (isNumeric(userInput)) {
       setPulls(userInput);
-    } 
-    else {
+    } else {
       alert("Hi");
       setPulls(previousInput);
     }
@@ -49,19 +82,20 @@ export default function InputBox() {
 
   return (
     <View style={styles.container1}>
-      <View style={styles.divider}></View>
-      <View style ={styles.containerVertical}>
-      <Text style = {styles.text2}>Selected Properties</Text>
-      <View style={styles.buttonContainer}>
-      <TextInput
+      <View style={styles.containerVertical}>
+        <Text style={styles.text2}>Selected Properties</Text>
+        <View style={styles.buttonContainer}>
+          <TextInput
             placeholder={banner}
-            editable ={false}
-            style = {styles.input2}/>
-      <TextInput
+            editable={false}
+            style={styles.input2}
+          />
+          <TextInput
             placeholder={itemType}
-            editable ={false}
-            style = {styles.input2}/>
-      </View>
+            editable={false}
+            style={styles.input2}
+          />
+        </View>
       </View>
       <SafeAreaView>
         <SafeAreaView style={styles.container}>
@@ -78,29 +112,56 @@ export default function InputBox() {
         <Text style={styles.text2}>Banner Type</Text>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity 
-          style = {styles.buttonStyle}
-          onPress = {()=>setBanner("Standard")}>
-            <Text>Standard</Text>
-          </TouchableOpacity>
-          <View style={styles.divider}></View>
-          
-          <TouchableOpacity 
-          style = {styles.buttonStyle}
-          onPress = {()=>setBanner("Event")}>
-            <Text>Event</Text>
-          </TouchableOpacity>
-          <View style={styles.divider}></View>
-          
-          <TouchableOpacity 
-          style = {styles.buttonStyle}
-          onPress = {()=>setBanner("Weapon")}>
-            <Text>Weapon</Text>
-          </TouchableOpacity>
+          <CustomButton1
+            color="#912100"
+            text="Standard"
+            onPress={() => checkBanner("Standard")}
+          />
+          <CustomButton1
+            color="#25338a"
+            text="Event"
+            onPress={() => checkBanner("Event")}
+          />
+          <CustomButton1
+            color="purple"
+            text="Weapon"
+            onPress={() => checkBanner("Weapon")}
+          />
         </View>
       </View>
-      <View style={styles.container}>
+      <View style={styles.defaultView}>
         <Text style={styles.text2}>Item type</Text>
+        <View style={styles.buttonContainer}>
+          <CustomButton1
+            color="#999999"
+            text="5* Character"
+            onPress={() => checkItemType("5* Character")}
+          />
+          <CustomButton1
+            color="#999999"
+            text="L. Character"
+            onPress={() => checkItemType("5* Limited Character")}
+          />
+          <CustomButton1
+            color="#999999"
+            text="5* Specific Character"
+            onPress={() => checkItemType("5* Specific Character")}
+          />
+          <CustomButton1
+            color="#999999"
+            text="5* Weapon"
+            onPress={() => checkItemType("5* Weapon")}
+          />
+          <CustomButton1
+            color="#999999"
+            text="5* Specific Weapon"
+            onPress={() => checkItemType("5* Specific Weapon")}
+          />
+        </View>
+      </View>
+      <View style={styles.container3}>
+        <CustomButton2 text="Calculate" color="green" onPress={()=>calculateProbability()}></CustomButton2>
+        <TextInput value = {probability.toString()} style={styles.input3} editable = {false}/>
       </View>
     </View>
   );
@@ -110,50 +171,54 @@ const styles = StyleSheet.create({
   text: {
     color: "white",
   },
-  buttonStyle: {
-    paddingHorizontal: 8,
-    paddingVertical: 6,
-    borderRadius: 4,
-    backgroundColor: "oldlace",
-    alignSelf: 'flex-start',
-    marginHorizontal: "1%",
-    marginBottom: 6,
-    minWidth: "25%",
-    textAlign: "center",
-  },
   buttonContainer: {
     padding: 5,
     flexWrap: "wrap",
     flexDirection: "row",
     alignItems: "center",
     display: "flex",
+    width: 400,
+    justifyContent: "center",
   },
   container1: {
-    top: "35%",
+    top: "26%",
     position: "absolute",
+    padding: 25
   },
   text2: {
     color: "white",
     fontWeight: "bold",
-    fontSize: 15,
+    fontSize: 16,
   },
   defaultView: {
     textAlign: "center",
     alignItems: "center",
-    padding:10,
+    justifyContent: "center",
+    padding: 10,
   },
   input2: {
-    backgroundColor: 'white',
-    width: '40%',
+    backgroundColor: "white",
+    width: "40%",
     height: 40,
-    textAlign: "left",
     color: "black",
     borderRadius: 8,
     textAlign: "center",
-    marginRight: 12,
+    marginRight: 6,
+  },
+  input3: {
+    backgroundColor: "white",
+    width: "20%",
+    height: 50,
+    color: "black",
+    borderRadius: 8,
+    textAlign: "center",
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    marginHorizontal: 5,
+    marginBottom: 6,
   },
   input: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     height: 40,
     textAlign: "left",
     paddingLeft: 10,
@@ -166,6 +231,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    display: "flex"
+  },
+  container3: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
+    padding: 20,
   },
   containerVertical: {
     alignItems: "center",
