@@ -1,7 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import {CustomButton1} from "./Buttons";
-import {CustomButton2} from "./Buttons";
+import {CustomButton1,CustomButton2,NavButton} from "./Buttons";
 import {
   CheckBox,
   TextInput,
@@ -9,8 +8,10 @@ import {
   Text,
   SafeAreaView,
   View,
+  Image,
   TouchableOpacity,
 } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
 
 export default function InputBox() {
   const [pulls, setPulls] = useState(null);
@@ -66,7 +67,7 @@ export default function InputBox() {
       var pityPulls = Math.floor(pulls/90)
       var tempPulls = pulls - pityPulls
       probability += (Math.pow((1 - (1/2)),pityPulls))
-      probability *= (Math.pow((1-(6/1000)),tempPulls))
+      probability *= (Math.pow((1-(3/1000)),tempPulls))
       setProbability((1-probability)*100)
       if (pulls >= 180) {
         setProbability(100);
@@ -147,6 +148,11 @@ export default function InputBox() {
   }
 
   return (
+    <SafeAreaView style={styles2.container}>
+      <NavButton/>
+      <Image source={require('./assets/genshin-logo.png')}
+      style={{width: 325, height: 140.4, position: 'absolute',top:'10%'}}/>
+      <Text style = {styles2.title}>Probability Calculator</Text>
     <View style={styles.container1}>
       <View style={styles.containerVertical}>
         <Text style={styles.text2}>Selected Properties</Text>
@@ -234,6 +240,8 @@ export default function InputBox() {
         <TextInput value = {probability.toFixed(3) + "%"} style={styles.input3} editable = {false}/>
       </View>
     </View>
+    <StatusBar style="auto"/>
+    </SafeAreaView>
   );
 }
 
@@ -251,9 +259,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   container1: {
-    top: "26%",
+    top: "35%",
     position: "absolute",
-    padding: 25
+    padding: 20
   },
   text2: {
     color: "white",
@@ -264,7 +272,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     alignItems: "center",
     justifyContent: "center",
-    padding: 2,
+    padding: 1,
   },
   input2: {
     backgroundColor: "white",
@@ -278,7 +286,7 @@ const styles = StyleSheet.create({
   input3: {
     backgroundColor: "white",
     width: "30%",
-    height: 50,
+    height: 40,
     color: "black",
     borderRadius: 8,
     textAlign: "center",
@@ -324,4 +332,23 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 30,
   },
+});
+
+const styles2 = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#2E2E2E',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  title: {
+    flexWrap:'wrap',
+    position: 'absolute',
+    textAlign: 'center',
+    top: '30%',
+    color: 'white',
+    fontSize: 25,
+    fontWeight: "bold",
+  }
 });
