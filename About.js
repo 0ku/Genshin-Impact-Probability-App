@@ -4,12 +4,17 @@ import {WebView,View,Image, StyleSheet, Text, SafeAreaView, Linking } from 'reac
 import InputBox from './Inputs';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
+import Clipboard from 'expo-clipboard';
 import { NavButton,CustomButton2 } from './Buttons';
 
 export default function About() {
     function redirect() {
         const link = 'https://docs.google.com/document/d/1xIEh-dEgFWUDUmnXF6yCtumxEVIhAWgtDYiGvGoxpTk/edit'
         Linking.openURL(link).catch((err) => console.error('An error occurred', err))
+    }
+    function copyDiscord() {
+        Clipboard.setString('FeedNet#9952')
+        alert("Discord ID has been copied to your clipboard")
     }
     return (
         <View style = {styles.mainContainer}>
@@ -21,12 +26,12 @@ export default function About() {
             </Text>
             <CustomButton2 text = "Document" color = "#369af7" onPress={()=>redirect()}/>
             <Text style={styles.description}>
-                Lastly, if you happen to find any problems/errors or any feedback/comments, feel free to add me on Discord.
+                Lastly, if you happen to find any problems/errors or any feedback/comments, feel free to add me on Discord: FeedNet#9952.
             </Text>
             <View style = {styles.rowContainer}>
             <Image source={require('./assets/yukinoEDIT1.jpg')}
-      style={{width: 75, height: 75,borderRadius:50}}/>
-                <CustomButton2 disabled = {true} text = "Discord" color = "#369af7" onPress={()=>redirect()}/>
+      style={{width: 75, height: 75,borderRadius:50,padding: 20}}/>
+                <CustomButton2 disabled = {true} text = "Copy" color = "#369af7" onPress={()=>copyDiscord()}/>
             </View>
             </View>
         </View>
@@ -54,6 +59,6 @@ const styles = StyleSheet.create({
     rowContainer: {
         flexDirection:'row',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     }
 })

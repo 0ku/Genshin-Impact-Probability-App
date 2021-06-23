@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
   container1: {
     top: "35%",
     position: "absolute",
-    padding: 20
+    padding: 12
   },
   text2: {
     color: "white",
@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
   containerVertical: {
     alignItems: "center",
     justifyContent: "center",
-    padding: 10,
+    padding: 2,
   },
   divider: {
     width: 10,
